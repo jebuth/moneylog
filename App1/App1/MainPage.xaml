@@ -7,10 +7,6 @@
     <ContentPage.Content>
         <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
             <StackLayout Orientation="Horizontal" >
-                <Label Text="Price "
-                       HorizontalTextAlignment="End"
-                       WidthRequest="150"
-                       ></Label>
                 <Entry x:Name="ReportedPrice"
                        Text="0.00"
                        HorizontalTextAlignment="End"
@@ -19,15 +15,13 @@
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" >
-                <Label Text="Category "
-                       WidthRequest="150"
-                       HorizontalTextAlignment="End"
-                       ></Label>
-                <Entry x:Name="SelectedCategory"
-                       Text=""
-                       WidthRequest="150"
-                       HorizontalTextAlignment="End"
-                       ></Entry>
+
+                <Picker x:Name="CategoryPicker"
+                        Title="Category"
+                        WidthRequest="150">
+                   
+                </Picker>
+                
             </StackLayout>
 
             <StackLayout>

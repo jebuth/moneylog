@@ -14,14 +14,14 @@ namespace App1.Services
 
         }
 
-        public List<Expense> GetExpenses()
-        {
-            var list = new List<Expense>
-            {
-                new Expense(DateTime.Now, 1.11f, "one dollar 11 cents", "Pets")
-            };
+        //public List<Expense> GetExpenses()
+        //{
+        //    //var list = new List<Expense>
+        //    //{
+        //    //    new Expense(DateTime.Now, 1.11f, "one dollar 11 cents", "Pets")
+        //    //};
 
-            return list;
-        }
+        //    //return list;
+        //}
     }
 }

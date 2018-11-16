@@ -59,6 +59,8 @@ namespace App1.Models
                         SheetsObject = Service.Spreadsheets.Values.Get(Constants.SpreadsheetID, Constants.Range).Execute();
                         LatestRow = SheetsObject.Values.Count;
 
+
+
                     }
                     catch (Exception ex)
                     {
@@ -74,9 +76,37 @@ namespace App1.Models
             }
         }
 
-        public void UpdateRequest()
+        public List<string> GetCategories()
         {
-            var oblist = new List<object>() { DateTime.Now.ToString("MM/dd/yyyy"), 99.99, "updated from iphone", "category" };
+            List<string> Categories = null;
+
+            SheetsObject = Service.Spreadsheets.Values.Get(Constants.SpreadsheetID, Constants.CategoriesRange).Execute();
+
+            IList<IList<Object>> values = SheetsObject.Values;
+
+            if (values != null && values.Count > 0)
+            {
+                Categories = new List<string>();
+                
+                foreach (var row in values)
+                {
+                    // Print columns A and E, which correspond to indices 0 and 4.
+                    Categories.Add(row[0].ToString());
+                }
+            }
+
+            return Categories;
+        }
+
+        public void UpdateRequest(Expense expense)
+        {
+            var oblist = new List<object>()
+            {
+                expense.Date.ToString("MM/dd/yyyy"),
+                expense.Amount,
+                expense.Description,
+                expense.Category
+            };
 
             ValueRange ValueRange = new ValueRange();
             ValueRange.Values = new List<IList<object>> { oblist };

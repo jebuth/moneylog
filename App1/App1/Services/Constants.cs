@@ -13,6 +13,7 @@ namespace App1.Services
         public const string RefreshToken = "1/KL_E2HUmYhkdScPdIsp9ILpE33AnvimijWYS1dpURGk";
         public const string SpreadsheetID = "15lIK4Iox1H-E20mwtRBhJkhNCAswQlCtuDxgf8NUcvc";
         public const string Range = "Transactions!B5:E";
+        public const string CategoriesRange = "Summary!B28:B";
 
 
 

@@ -33,11 +33,23 @@ namespace App1
             // Initialize
             var init = api;
             SheetObject = api;
+
+            CategoryPicker.ItemsSource = SheetObject.GetCategories();
+
         }
 
         private void AddButton_Clicked(object sender, EventArgs e)
         {
-            SheetObject.UpdateRequest();
+
+            Expense newExpense = new Expense
+            {
+                Date = DateTime.Now,
+                Amount = ReportedPrice.Text.ToString(),
+                Description = "test",
+                Category = CategoryPicker.SelectedItem.ToString()
+            };
+
+            SheetObject.UpdateRequest(newExpense);
         }
 
     }
