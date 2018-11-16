@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:App1"
+             x:Class="App1.MainPage">
+
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <StackLayout Orientation="Horizontal" >
+                <Label Text="Price "
+                       HorizontalTextAlignment="End"
+                       WidthRequest="150"
+                       ></Label>
+                <Entry x:Name="ReportedPrice"
+                       Text="0.00"
+                       HorizontalTextAlignment="End"
+                       WidthRequest ="150"
+                       ></Entry>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" >
+                <Label Text="Category "
+                       WidthRequest="150"
+                       HorizontalTextAlignment="End"
+                       ></Label>
+                <Entry x:Name="SelectedCategory"
+                       Text=""
+                       WidthRequest="150"
+                       HorizontalTextAlignment="End"
+                       ></Entry>
+            </StackLayout>
+
+            <StackLayout>
+                <Button x:Name="AddButton"
+                        Text="add"
+                        TextColor="White"
+                        VerticalOptions="Fill" 
+                        HorizontalOptions="Fill"
+                        BackgroundColor="RoyalBlue"
+                        BorderColor="Black"
+                        Clicked="AddButton_Clicked"
+                        >
+
+                </Button>
+            </StackLayout>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
+
