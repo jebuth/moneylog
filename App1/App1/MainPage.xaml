@@ -5,23 +5,34 @@
              x:Class="App1.MainPage">
 
     <ContentPage.Content>
-        <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-            <StackLayout Orientation="Horizontal" >
-                <Entry x:Name="ReportedPrice"
-                       Text="0.00"
-                       HorizontalTextAlignment="End"
-                       WidthRequest ="150"
-                       ></Entry>
+      <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                   
+            <StackLayout Orientation="Horizontal" > 
+            <Entry x:Name="ReportedPrice"
+                
+                Text="0.00"
+                HorizontalTextAlignment="End"
+                WidthRequest ="150"
+                TextChanged="ReportedPrice_TextChanged"
+                ></Entry>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal" >
+                <Entry x:Name="ReportedDescription"
+                
+                Placeholder="optional desc"
+                HorizontalTextAlignment="End"
+                WidthRequest ="150"
+                
+                ></Entry>
+            </StackLayout>
+
+        <StackLayout Orientation="Horizontal" >
 
                 <Picker x:Name="CategoryPicker"
                         Title="Category"
                         WidthRequest="150">
-                   
                 </Picker>
-                
             </StackLayout>
 
             <StackLayout>
@@ -32,14 +43,12 @@
                         HorizontalOptions="Fill"
                         BackgroundColor="RoyalBlue"
                         BorderColor="Black"
-                        Clicked="AddButton_Clicked"
-                        >
-
+                        Clicked="AddButton_Clicked">
                 </Button>
             </StackLayout>
 
-
-        </StackLayout>
+ 
+      </StackLayout>
     </ContentPage.Content>
 
 </ContentPage>

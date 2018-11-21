@@ -21,7 +21,6 @@ namespace App1.Models
         public string SpreadSheetID  { get; set; }
         public string Range { get; set; }
         public int LatestRow { get; set; }
-        //public SpreadsheetsResource.ValuesResource.GetRequest Request { get; set; }
         static string[] Scopes = { SheetsService.Scope.Spreadsheets};
 
         public SheetsAPI()
