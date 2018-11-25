@@ -95,6 +95,9 @@
     <BundleResource Include="credentials.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </BundleResource>
+    <BundleResource Include="driveCredentials.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </BundleResource>
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -151,6 +154,9 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="google.apis.drive.v3">
+      <Version>1.36.1.1407</Version>
+    </PackageReference>
     <PackageReference Include="google.apis.sheets.v4">
       <Version>1.36.1.1399</Version>
     </PackageReference>

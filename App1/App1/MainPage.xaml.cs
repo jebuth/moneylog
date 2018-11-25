@@ -22,10 +22,15 @@ namespace App1
     public partial class MainPage : ContentPage
     {
         //static string[] Scopes = { SheetsService.Scope.Spreadsheets };
-        static string ApplicationName = "Google Sheets API .NET Quickstart";
-        private SheetsService Service = null;
-        private ValueRange SheetsObj = null;
+        //static string ApplicationName = "Google Sheets API .NET Quickstart";
+        //private SheetsService Service = null;
+        //private ValueRange SheetsObj = null;
         private SheetsAPI SheetObject;
+
+        public MainPage(Models.DriveAPI api)
+        {
+
+        }
 
         public MainPage(Models.SheetsAPI api)
         {
