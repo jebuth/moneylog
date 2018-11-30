@@ -2,53 +2,78 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:App1"
-             x:Class="App1.MainPage">
+             x:Class="App1.MainPage"
+             BackgroundColor="AliceBlue">
 
     <ContentPage.Content>
-      <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                   
-            <StackLayout Orientation="Horizontal" > 
+
+        
+      <StackLayout HorizontalOptions="Center" 
+                   VerticalOptions="Center">
+
+            <StackLayout BackgroundColor="AliceBlue"
+                         HorizontalOptions="FillAndExpand"
+                         VerticalOptions="FillAndExpand"
+                         >
+                
+                
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+
+                <Picker x:Name="SheetPicker"
+                        Title="Sheet"
+                        WidthRequest="300"
+                        SelectedIndexChanged="SheetPicker_SelectedIndexChanged">
+                        
+                </Picker>
+                
+            </StackLayout>
+          
+          
+          
+          
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" > 
             <Entry x:Name="ReportedPrice"
                 
                 Text="0.00"
                 HorizontalTextAlignment="End"
-                WidthRequest ="150"
+                WidthRequest ="200"
                 TextChanged="ReportedPrice_TextChanged"
                 ></Entry>
             </StackLayout>
 
-            <StackLayout Orientation="Horizontal" >
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" >
                 <Entry x:Name="ReportedDescription"
                 
                 Placeholder="optional desc"
                 HorizontalTextAlignment="End"
-                WidthRequest ="150"
+                WidthRequest ="200"
                 
                 ></Entry>
             </StackLayout>
 
-        <StackLayout Orientation="Horizontal" >
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
 
                 <Picker x:Name="CategoryPicker"
                         Title="Category"
-                        WidthRequest="150">
+                        WidthRequest="200">
                 </Picker>
             </StackLayout>
 
-            <StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
                 <Button x:Name="AddButton"
                         Text="add"
                         TextColor="White"
-                        VerticalOptions="Fill" 
-                        HorizontalOptions="Fill"
+                        WidthRequest="200"
                         BackgroundColor="RoyalBlue"
                         BorderColor="Black"
                         Clicked="AddButton_Clicked">
                 </Button>
             </StackLayout>
 
- 
-      </StackLayout>
+
+        </StackLayout>
     </ContentPage.Content>
 
 </ContentPage>

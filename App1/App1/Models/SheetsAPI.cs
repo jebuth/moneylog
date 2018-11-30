@@ -20,115 +20,108 @@ namespace App1.Models
         public UserCredential Credential { get; set; }
         public ClientSecrets Secrets { get; set; }
         public TokenResponse Token { get; set; }
-        public string SpreadSheetID  { get; set; }
+        public string SpreadSheetID { get; set; }
         public string Range { get; set; }
         public int LatestRow { get; set; }
-        static string[] Scopes = { SheetsService.Scope.Spreadsheets, SheetsService.Scope.Drive};
+        static string[] Scopes = { SheetsService.Scope.Spreadsheets, SheetsService.Scope.Drive };
 
         public SheetsAPI()
         {
-            try
+
+            using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {
-                using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
+                try
                 {
-                    try
+                    Secrets = new ClientSecrets()
                     {
-                        Secrets = new ClientSecrets()
+                        ClientId = Constants.ClientID,
+                        ClientSecret = Constants.ClientSecret
+                    };
+
+                    Token = new TokenResponse { RefreshToken = Constants.RefreshToken };
+
+                    Credential = new UserCredential(new GoogleAuthorizationCodeFlow(
+                        new GoogleAuthorizationCodeFlow.Initializer
                         {
-                            ClientId = Constants.ClientID,
-                            ClientSecret = Constants.ClientSecret
-                        };
-
-                        Token = new TokenResponse { RefreshToken = Constants.RefreshToken };
-
-                        Credential = new UserCredential(new GoogleAuthorizationCodeFlow(
-                            new GoogleAuthorizationCodeFlow.Initializer
-                            {
-                                ClientSecrets = Secrets
-                            }),
-                            "user",
-                            Token);
+                            ClientSecrets = Secrets
+                        }),
+                        "user",
+                        Token);
 
 
-                        SheetsService = new SheetsService(new BaseClientService.Initializer()
-                        {
-                            HttpClientInitializer = Credential,
-                            ApplicationName = Constants.ApplicationName
-                        });
-
-                        DriveService = new DriveService(new BaseClientService.Initializer()
-                        {
-                            HttpClientInitializer = Credential,
-                            ApplicationName = Constants.ApplicationName
-                        });
-
-                        //=================================================================
-
-                        // Make the initial get request 
-                        //Request = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetID, Constants.Range);
-                        SheetsObject = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetID, Constants.Range).Execute();
-                        LatestRow = SheetsObject.Values.Count;
-
-                        //=================================================================
-
-                        FilesResource.ListRequest getFolder = DriveService.Files.List();
-                        getFolder.Q = "mimeType='application/vnd.google-apps.folder' and name='Expenses'";
-                        //listRequest.PageSize = 10;
-                        getFolder.Fields = "nextPageToken, files(id, name)";
-                        getFolder.Spaces = "drive";
-
-
-                        // get FolderID
-                        IList<Google.Apis.Drive.v3.Data.File> folder = getFolder.Execute()
-                            .Files;
-
-                        var folderID = folder[0].Id;
-
-                        FilesResource.ListRequest filesInFolder = DriveService.Files.List();
-                        filesInFolder.Q = "'" + folderID.ToString() + "' in parents";
-                        //listRequest.PageSize = 10;
-                        filesInFolder.Fields = "nextPageToken, files(id, name)";
-                        filesInFolder.Spaces = "drive";
-
-                        IList<Google.Apis.Drive.v3.Data.File> children = filesInFolder.Execute()
-                            .Files;
-
-
-
-                        List<string> fileNames = new List<string>();
-
-
-
-                        Console.WriteLine("Files:");
-                        if (children != null && children.Count > 0)
-                        {
-                            foreach (var child in children)
-                            {
-                                fileNames.Add(child.Name);
-                                Console.WriteLine("{0} ({1})", child.Name, child.Id);
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No files found.");
-                        }
-                        Console.Read();
-
-
-
-                    }
-                    catch (Exception ex)
+                    SheetsService = new SheetsService(new BaseClientService.Initializer()
                     {
-                        // error
-                        Console.WriteLine("something went wrong");
-                        throw ex;
-                    }
+                        HttpClientInitializer = Credential,
+                        ApplicationName = Constants.ApplicationName
+                    });
+
+                    DriveService = new DriveService(new BaseClientService.Initializer()
+                    {
+                        HttpClientInitializer = Credential,
+                        ApplicationName = Constants.ApplicationName
+                    });
+
+                    //=================================================================
+
+                    
+
+                    // Make the initial get request 
+                    SheetsObject = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetID, Constants.Range).Execute();
+                    LatestRow = SheetsObject.Values.Count;
+
+                }
+                catch (Exception ex)
+                {
+                    // error
+                    Console.WriteLine("something went wrong");
+                    throw ex;
                 }
             }
-            catch(Exception eeeeeeeeeeeeeeeeee)
-            {
+        }
 
+        public List<string> GetFilesFromFolder()
+        {
+
+            FilesResource.ListRequest getFolder = DriveService.Files.List();
+            getFolder.Q = "mimeType='application/vnd.google-apps.folder' and name='Expenses'";
+            //listRequest.PageSize = 10;
+            getFolder.Fields = "nextPageToken, files(id, name)";
+            getFolder.Spaces = "drive";
+
+
+            // get FolderID
+            IList<Google.Apis.Drive.v3.Data.File> folder = getFolder.Execute()
+                .Files;
+
+            var folderID = folder[0].Id;
+
+            FilesResource.ListRequest filesInFolder = DriveService.Files.List();
+            filesInFolder.Q = "'" + folderID.ToString() + "' in parents";
+            //listRequest.PageSize = 10;
+            filesInFolder.Fields = "nextPageToken, files(id, name)";
+            filesInFolder.Spaces = "drive";
+
+            IList<Google.Apis.Drive.v3.Data.File> children = filesInFolder.Execute()
+                .Files;
+            
+            List<string> fileNames = new List<string>();
+            
+            Console.WriteLine("Files:");
+            if (children != null && children.Count > 0)
+            {
+                foreach (var child in children)
+                {
+                    fileNames.Add(child.Name);
+                    Console.WriteLine("{0} ({1})", child.Name, child.Id);
+                }
             }
+            else
+            {
+                Console.WriteLine("No files found.");
+            }
+            //nsole.Read();
+
+            return fileNames;
         }
 
         public List<string> GetCategories()
@@ -142,7 +135,7 @@ namespace App1.Models
             if (values != null && values.Count > 0)
             {
                 Categories = new List<string>();
-                
+
                 foreach (var row in values)
                 {
                     // Print columns A and E, which correspond to indices 0 and 4.

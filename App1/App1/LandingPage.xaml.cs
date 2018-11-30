@@ -19,6 +19,11 @@ namespace App1
 
         private SheetsService Service;
 
+        public LandingPage()
+        {
+            InitializeComponent();
+        }
+
         public LandingPage(ValueRange SheetObj, SheetsService Service)
         {
             InitializeComponent();

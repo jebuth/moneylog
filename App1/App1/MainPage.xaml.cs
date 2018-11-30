@@ -19,6 +19,7 @@ using System.Globalization;
 
 namespace App1
 {    
+  
     public partial class MainPage : ContentPage
     {
         //static string[] Scopes = { SheetsService.Scope.Spreadsheets };
@@ -27,9 +28,9 @@ namespace App1
         //private ValueRange SheetsObj = null;
         private SheetsAPI SheetObject;
 
-        public MainPage(Models.DriveAPI api)
+        public MainPage()
         {
-
+            InitializeComponent();
         }
 
         public MainPage(Models.SheetsAPI api)
@@ -41,6 +42,9 @@ namespace App1
             SheetObject = api;
 
             AddButton.IsEnabled = false;
+
+            SheetPicker.ItemsSource = SheetObject.GetFilesFromFolder();
+
 
             CategoryPicker.ItemsSource = SheetObject.GetCategories();
             CategoryPicker.SelectedIndex = 0;
@@ -95,5 +99,9 @@ namespace App1
             return money.IsMatch(text);
         }
 
+        private void SheetPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 } 
