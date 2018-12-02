@@ -10,12 +10,10 @@ namespace App1
         public App()
         {
             InitializeComponent();
-            //var init = new Models.SheetsAPI();
-
-
-
+            var init = new Models.SheetsAPI();
+            
             //MainPage = new MainPage(init);
-            MainPage = new MainPage();
+            MainPage = new MainPage(init);
         }
 
         protected override void OnStart()

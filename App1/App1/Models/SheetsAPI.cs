@@ -32,15 +32,18 @@ namespace App1.Models
             {
                 try
                 {
+                    //var what = new OfflineAccessGoogleAuthorizationCodeFlow();
+
+
                     Secrets = new ClientSecrets()
                     {
-                        ClientId = Constants.ClientID,
-                        ClientSecret = Constants.ClientSecret
+                        ClientId = GoogleAccess.ClientID,
+                        ClientSecret = GoogleAccess.ClientSecret
                     };
 
-                    Token = new TokenResponse { RefreshToken = Constants.RefreshToken };
+                    Token = new TokenResponse { RefreshToken = GoogleAccess.RefreshToken, AccessToken= GoogleAccess.AccessToken };
 
-                    Credential = new UserCredential(new GoogleAuthorizationCodeFlow(
+                    Credential = new UserCredential(new OfflineAccessGoogleAuthorizationCodeFlow(
                         new GoogleAuthorizationCodeFlow.Initializer
                         {
                             ClientSecrets = Secrets
@@ -48,25 +51,25 @@ namespace App1.Models
                         "user",
                         Token);
 
+                    
+                   // Constants.AccessToken = Credential.Token.AccessToken;
 
                     SheetsService = new SheetsService(new BaseClientService.Initializer()
                     {
                         HttpClientInitializer = Credential,
-                        ApplicationName = Constants.ApplicationName
+                        ApplicationName = GoogleAccess.ApplicationName
                     });
 
                     DriveService = new DriveService(new BaseClientService.Initializer()
                     {
                         HttpClientInitializer = Credential,
-                        ApplicationName = Constants.ApplicationName
+                        ApplicationName = GoogleAccess.ApplicationName
                     });
 
                     //=================================================================
-
                     
-
                     // Make the initial get request 
-                    SheetsObject = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetID, Constants.Range).Execute();
+                    SheetsObject = SheetsService.Spreadsheets.Values.Get(GoogleAccess.SpreadsheetID, Constants.Range).Execute();
                     LatestRow = SheetsObject.Values.Count;
 
                 }
@@ -128,7 +131,7 @@ namespace App1.Models
         {
             List<string> Categories = null;
 
-            SheetsObject = SheetsService.Spreadsheets.Values.Get(Constants.SpreadsheetID, Constants.CategoriesRange).Execute();
+            SheetsObject = SheetsService.Spreadsheets.Values.Get(GoogleAccess.SpreadsheetID, Constants.CategoriesRange).Execute();
 
             IList<IList<Object>> values = SheetsObject.Values;
 
@@ -160,7 +163,7 @@ namespace App1.Models
             ValueRange.Values = new List<IList<object>> { oblist };
             string UpdateRange = "Transactions!B" + ((LatestRow++) + 5).ToString() + ":E";
 
-            var UpdateRequest = SheetsService.Spreadsheets.Values.Update(ValueRange, Constants.SpreadsheetID, UpdateRange);
+            var UpdateRequest = SheetsService.Spreadsheets.Values.Update(ValueRange, GoogleAccess.SpreadsheetID, UpdateRange);
 
             // might have to change this to USERENTERED
             UpdateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;

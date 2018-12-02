@@ -44,19 +44,14 @@ namespace App1
             AddButton.IsEnabled = false;
 
             SheetPicker.ItemsSource = SheetObject.GetFilesFromFolder();
-
+            SheetPicker.SelectedIndex = 0;
 
             CategoryPicker.ItemsSource = SheetObject.GetCategories();
             CategoryPicker.SelectedIndex = 0;
-
         }
 
         private void AddButton_Clicked(object sender, EventArgs e)
         {
-            var t = ReportedDescription.Text;
-
-            var wt = ReportedDescription.Text.ToString();
-
             Expense newExpense = new Expense
             {
                 Date = DateTime.Now,
@@ -101,7 +96,9 @@ namespace App1
 
         private void SheetPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            
         }
+
+
     }
 } 
