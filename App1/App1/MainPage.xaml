@@ -4,7 +4,15 @@
              xmlns:local="clr-namespace:App1"
              x:Class="App1.MainPage"
              BackgroundColor="Gray">
-    <StackLayout BackgroundColor="Green" VerticalOptions="Center">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Icon="plus.png" Order="Primary" Clicked="ToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
+    
+    <StackLayout BackgroundColor="Green" 
+                 VerticalOptions="Center"
+                 BindingContext=""
+                 >
 
 
         <Grid BackgroundColor="AliceBlue">
@@ -28,11 +36,12 @@
             </Label>
 
 
-
             <StackLayout Grid.Row="1" Grid.Column="1">
                 
                 <Picker x:Name="SheetPicker" 
-                        SelectedIndex="0"></Picker>
+                        SelectedIndex="0"
+                        SelectedIndexChanged="SheetPicker_SelectedIndexChanged"
+                        ></Picker>
                 
                 <Entry x:Name="ReportedPrice" 
                        Keyboard="Numeric"
@@ -54,7 +63,8 @@
                     Text="Log" 
                     TextColor="White" 
                     FontAttributes="Bold" 
-                    BackgroundColor="LightSkyBlue">
+                    BackgroundColor="LightSkyBlue"
+                    Clicked="AddButton_Clicked">
                 </Button>
 
             </StackLayout>

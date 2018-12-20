@@ -9,6 +9,7 @@ using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Auth.OAuth2.Flows;
 using App1.Services;
 using Google.Apis.Drive.v3;
+using System.Linq;
 
 namespace App1.Models
 {
@@ -25,16 +26,20 @@ namespace App1.Models
         public int LatestRow { get; set; }
         static string[] Scopes = { SheetsService.Scope.Spreadsheets, SheetsService.Scope.Drive };
 
+        //important!
+        public SheetObj ActiveSheet{ get; set; }
+
+        // list of available sheets
+        public List<SheetObj> AvailableSheets = null;
+        public List<string> AvailableSheetTitles = null;
+
+
         public SheetsAPI()
         {
-
             using (var stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
             {
                 try
                 {
-                    //var what = new OfflineAccessGoogleAuthorizationCodeFlow();
-
-
                     Secrets = new ClientSecrets()
                     {
                         ClientId = GoogleAccess.ClientID,
@@ -72,6 +77,8 @@ namespace App1.Models
                     SheetsObject = SheetsService.Spreadsheets.Values.Get(GoogleAccess.SpreadsheetID, Constants.Range).Execute();
                     LatestRow = SheetsObject.Values.Count;
 
+                    GetFilesFromFolder();
+
                 }
                 catch (Exception ex)
                 {
@@ -82,9 +89,8 @@ namespace App1.Models
             }
         }
 
-        public List<string> GetFilesFromFolder()
-        {
-
+        public List<SheetObj> GetFilesFromFolder()
+        {        
             FilesResource.ListRequest getFolder = DriveService.Files.List();
             getFolder.Q = "mimeType='application/vnd.google-apps.folder' and name='Expenses'";
             //listRequest.PageSize = 10;
@@ -108,14 +114,23 @@ namespace App1.Models
                 .Files;
             
             List<string> fileNames = new List<string>();
-            
+            AvailableSheets = new List<SheetObj>();
+            AvailableSheetTitles = new List<string>();
+
+
             Console.WriteLine("Files:");
             if (children != null && children.Count > 0)
             {
                 foreach (var child in children)
                 {
-                    fileNames.Add(child.Name);
-                    Console.WriteLine("{0} ({1})", child.Name, child.Id);
+                    //fileNames.Add(child.Name);
+                    AvailableSheets.Add(new SheetObj { ID = child.Id, Title = child.Name });
+
+
+                    //add to Titles list
+                    AvailableSheetTitles.Add(child.Name);
+
+                    // Console.WriteLine("{0} ({1})", child.Name, child.Id);
                 }
             }
             else
@@ -124,7 +139,13 @@ namespace App1.Models
             }
             //nsole.Read();
 
-            return fileNames;
+
+            // set default active sheet
+            UpdateActiveSheet(null);
+
+
+            //return fileNames;
+            return AvailableSheets;
         }
 
         public List<string> GetCategories()
@@ -159,16 +180,88 @@ namespace App1.Models
                 expense.Category
             };
 
+
+
+            // LATEST rows not updating!
+
             ValueRange ValueRange = new ValueRange();
             ValueRange.Values = new List<IList<object>> { oblist };
-            string UpdateRange = "Transactions!B" + ((LatestRow++) + 5).ToString() + ":E";
+            //string UpdateRange = "Transactions!B" + ((LatestRow++) + 5).ToString() + ":E";
+            ActiveSheet.UpdateRange = "Transactions!B" + ((ActiveSheet.LatestRow++) + 5).ToString() + ":E";
 
-            var UpdateRequest = SheetsService.Spreadsheets.Values.Update(ValueRange, GoogleAccess.SpreadsheetID, UpdateRange);
+            //var UpdateRequest = SheetsService.Spreadsheets.Values.Update(ValueRange, GoogleAccess.SpreadsheetID, UpdateRange);
+            var UpdateRequest = SheetsService.Spreadsheets.Values.Update(ValueRange, ActiveSheet.ID, ActiveSheet.UpdateRange);
 
             // might have to change this to USERENTERED
             UpdateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;
-
             var result = UpdateRequest.Execute();
+
+        }
+
+        public List<string> GetAvailableTitles()
+        {
+            return AvailableSheetTitles;
+        }
+
+        public string GetIDByTitle(string Title)
+        {
+
+            // Budget   1tQUyndTujTi2iPh1UXxi6WH7u89otm8Zh6ZNoFGjxl4
+            // Test     E20mwtRBhJkhNCAswQlCtuDxgf8NUcvc
+            // October  1eQM8DAXs3TTmeHetFc6HcDT6jv2ibr7aTH4JNHbE2ug
+
+            //availabeSHeets is null!!!!
+            foreach ( SheetObj so in AvailableSheets)
+            {
+                if(string.Equals(so.Title, Title))
+                {
+                    ActiveSheet.Title = Title;
+                    //return so.ID;
+                    return so.ID;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Updates ActiveSheet's properties
+        /// </summary>
+        /// <param name="SheetID"></param>
+        /// <returns></returns>
+        public bool UpdateActiveSheet(string SheetID)
+        {
+            // default
+            if (SheetID == null)
+            {
+                ActiveSheet = AvailableSheets[0];
+
+
+                SheetsObject = SheetsService.Spreadsheets.Values.Get(ActiveSheet.ID, Constants.Range).Execute();
+
+                //set Latest Row
+                ActiveSheet.LatestRow = SheetsObject.Values.Count;
+
+            }
+
+            // search AvailableSheets for matching SHeetID
+
+            else
+            {
+                ActiveSheet = AvailableSheets.Where(x => x.ID == SheetID).FirstOrDefault();
+
+                if (ActiveSheet != null)
+                {
+                    SheetsObject = SheetsService.Spreadsheets.Values.Get(ActiveSheet.ID, Constants.Range).Execute();
+                    ActiveSheet.LatestRow = SheetsObject.Values.Count;
+                }
+                
+            }
+            return true;
+
+
+            // Budget   1tQUyndTujTi2iPh1UXxi6WH7u89otm8Zh6ZNoFGjxl4
+            // Test     E20mwtRBhJkhNCAswQlCtuDxgf8NUcvc
+            // October  1eQM8DAXs3TTmeHetFc6HcDT6jv2ibr7aTH4JNHbE2ug
 
         }
 

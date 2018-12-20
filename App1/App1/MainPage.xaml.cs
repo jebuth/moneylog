@@ -22,10 +22,6 @@ namespace App1
   
     public partial class MainPage : ContentPage
     {
-        //static string[] Scopes = { SheetsService.Scope.Spreadsheets };
-        //static string ApplicationName = "Google Sheets API .NET Quickstart";
-        //private SheetsService Service = null;
-        //private ValueRange SheetsObj = null;
         private SheetsAPI SheetObject;
 
         public MainPage()
@@ -41,9 +37,10 @@ namespace App1
             var init = api;
             SheetObject = api;
 
-            AddButton.IsEnabled = false;
+            //AddButton.IsEnabled = false;
 
-            SheetPicker.ItemsSource = SheetObject.GetFilesFromFolder();
+            SheetPicker.ItemsSource = SheetObject.GetAvailableTitles();
+           
             SheetPicker.SelectedIndex = 0;
 
             CategoryPicker.ItemsSource = SheetObject.GetCategories();
@@ -68,9 +65,8 @@ namespace App1
             //Remove previous formatting, or the decimal check will fail including leading zeros
             string value = ReportedPrice.Text.Replace(",", "")
                 .Replace("$", "").Replace(".", "").TrimStart('0');
-            decimal ul;
             //Check we are indeed handling a number
-            if (decimal.TryParse(value, out ul))
+            if (decimal.TryParse(value, out decimal ul))
             {
                 ul /= 100;
                 //Unsub the event so we don't enter a loop
@@ -78,7 +74,6 @@ namespace App1
                 //Format the text as currency
                 ReportedPrice.Text = string.Format(CultureInfo.CreateSpecificCulture("en-US"), "{0:C2}", ul);
                 ReportedPrice.TextChanged += ReportedPrice_TextChanged;
-                
             }
 
             AddButton.IsEnabled = TextisValid(ReportedPrice.Text);
@@ -96,9 +91,19 @@ namespace App1
 
         private void SheetPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            //var SelectedSpreadsheet = this.SheetPicker.SelectedItem as SheetObj;
+            var s = this.SheetPicker.SelectedItem.ToString();
+
+            //var who = SelectedSpreadsheet.Title;
+
+            var sheetID = SheetObject.GetIDByTitle(s);
+
+            SheetObject.UpdateActiveSheet(sheetID);
         }
 
+        private void ToolbarItem_Clicked(object sender, EventArgs e)
+        {
 
+        }
     }
 } 

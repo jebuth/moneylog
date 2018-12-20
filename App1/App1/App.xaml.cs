@@ -13,7 +13,7 @@ namespace App1
             var init = new Models.SheetsAPI();
             
             //MainPage = new MainPage(init);
-            MainPage = new MainPage(init);
+            MainPage = new NavigationPage(new MainPage(init));
         }
 
         protected override void OnStart()
