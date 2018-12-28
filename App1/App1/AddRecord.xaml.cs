@@ -14,50 +14,53 @@ using Xamarin.Forms;
 using Google.Apis.Auth.OAuth2.Responses;
 using Google.Apis.Auth.OAuth2.Flows;
 using App1.Models;
+using App1.Services;
 using System.Text.RegularExpressions;
 using System.Globalization;
 
 namespace App1
 {    
-  
-    public partial class MainPage : ContentPage
+    public partial class AddRecord : ContentPage
     {
-        private SheetsAPI SheetObject;
+        //private SheetsAPI GoogleSheetsService { get; set; }
+        private SheetObj ActiveSheet{ get; set; }
+        //private AddRecordViewModel ViewModel { get; set; }
 
-        public MainPage()
+        public AddRecord()
         {
-            InitializeComponent();
+           // BindingContext = new AddRecordViewModel();
+
+            //InitializeComponent();
         }
 
-        public MainPage(Models.SheetsAPI api)
+
+        public AddRecord(SheetsAPI _GoogleSheetsService)
         {
+
+            BindingContext = new AddRecordViewModel(_GoogleSheetsService);
+
             InitializeComponent();
 
-            // Initialize
-            var init = api;
-            SheetObject = api;
+            //try
+            //{
+            //    if (GoogleSheetsService == null)
+            //    {
+            //        GoogleSheetsService = _GoogleSheetsService;
+            //        //ViewModel = new AddRecordViewModel();
+            //        BindingContext = new AddRecordViewModel(_GoogleSheetsService);     
+                    
+            //    }
+            //}
 
-            //AddButton.IsEnabled = false;
+            //catch(Exception ex)
+            //{
 
-            SheetPicker.ItemsSource = SheetObject.GetAvailableTitles();
-           
-            SheetPicker.SelectedIndex = 0;
-
-            CategoryPicker.ItemsSource = SheetObject.GetCategories();
-            CategoryPicker.SelectedIndex = 0;
+            //}  
         }
 
         private void AddButton_Clicked(object sender, EventArgs e)
         {
-            Expense newExpense = new Expense
-            {
-                Date = DateTime.Now,
-                Amount = ReportedPrice.Text.ToString(),
-                Description = ReportedDescription.Text == null ? "" : ReportedDescription.Text.ToString(),
-                Category = CategoryPicker.SelectedItem.ToString()
-            };
-
-            SheetObject.UpdateRequest(newExpense);
+            (BindingContext as AddRecordViewModel).AddExpense();
         }
 
         private void ReportedPrice_TextChanged(object sender, TextChangedEventArgs e)
@@ -92,13 +95,21 @@ namespace App1
         private void SheetPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
             //var SelectedSpreadsheet = this.SheetPicker.SelectedItem as SheetObj;
-            var s = this.SheetPicker.SelectedItem.ToString();
+            //var s = this.SheetPicker.SelectedItem.ToString();
+
+            //this.ActiveSheet = this.SheetPicker.SelectedItem as SheetObj;
 
             //var who = SelectedSpreadsheet.Title;
 
-            var sheetID = SheetObject.GetIDByTitle(s);
+            //var sheetID = SheetObject.GetIDByTitle(s);
 
-            SheetObject.UpdateActiveSheet(sheetID);
+            //SheetObject.UpdateActiveSheet(sheetID);
+
+
+            // the drop down should already be populated by SheetObjs so 
+            // we don't need to do all this bs
+
+
         }
 
         private void ToolbarItem_Clicked(object sender, EventArgs e)

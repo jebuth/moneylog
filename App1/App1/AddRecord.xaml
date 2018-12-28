@@ -2,19 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:App1"
-             x:Class="App1.MainPage"
+             x:Class="App1.AddRecord"
              BackgroundColor="Gray">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Icon="plus.png" Order="Primary" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
-    
+
     <StackLayout BackgroundColor="Green" 
-                 VerticalOptions="Center"
-                 BindingContext=""
+                 VerticalOptions="Center"                 
                  >
-
-
         <Grid BackgroundColor="AliceBlue">
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -35,45 +32,45 @@
                    FontFamily="Verdana">
             </Label>
 
+            <StackLayout Grid.Row="1" 
+                         Grid.Column="1">
 
-            <StackLayout Grid.Row="1" Grid.Column="1">
-                
-                <Picker x:Name="SheetPicker" 
-                        SelectedIndex="0"
-                        SelectedIndexChanged="SheetPicker_SelectedIndexChanged"
-                        ></Picker>
-                
-                <Entry x:Name="ReportedPrice" 
+                <Picker
+                        Title="Select a sheet"
+                        ItemsSource="{Binding AvailableSheets}"
+                        ItemDisplayBinding="{Binding Title}"
+                        SelectedItem="{Binding SelectedSheet}">
+                </Picker>
+
+                <Entry x:Name="ReportedPrice"
                        Keyboard="Numeric"
                        Placeholder="0.00"
-                       TextChanged="ReportedPrice_TextChanged"></Entry>
+                       TextChanged="ReportedPrice_TextChanged"
+                       Text="{Binding Amount}"
+                       ></Entry>
 
-                <Entry x:Name="ReportedDescription" 
+                <Entry
                        Keyboard="Default"
-                       Placeholder="Description">
+                       Placeholder="Description"
+                       Text="{Binding Description}"
+                       >
                 </Entry>
-                
-                
-                <Picker x:Name="CategoryPicker" 
-                        SelectedIndex="0"></Picker>
 
 
-                <Button 
-                    x:Name="AddButton"
+                <Picker
+                        ItemsSource="{Binding Categories}"
+                        SelectedItem="{Binding SelectedCategory}"
+                        ></Picker>
+
+                <Button x:Name="AddButton"
                     Text="Log" 
                     TextColor="White" 
                     FontAttributes="Bold" 
                     BackgroundColor="LightSkyBlue"
                     Clicked="AddButton_Clicked">
                 </Button>
-
             </StackLayout>
-
         </Grid>
-
-
-
-
     </StackLayout>
 
 </ContentPage>

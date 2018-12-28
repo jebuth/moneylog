@@ -10,10 +10,13 @@ namespace App1
         public App()
         {
             InitializeComponent();
-            var init = new Models.SheetsAPI();
+            var GoogleSheetsService = new Services.SheetsAPI();
+
+            //get viewmodel
+            //MainPage = new AddRecord(init.ActiveSheet);
             
-            //MainPage = new MainPage(init);
-            MainPage = new NavigationPage(new MainPage(init));
+           MainPage = new AddRecord(GoogleSheetsService);
+            // MainPage = new NavigationPage(new AddRecord(init));
         }
 
         protected override void OnStart()
