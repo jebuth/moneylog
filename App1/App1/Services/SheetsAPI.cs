@@ -3,6 +3,7 @@ using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Google.Apis.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Google.Apis.Auth.OAuth2.Responses;
@@ -55,7 +56,6 @@ namespace App1.Services
                         }),
                         "user",
                         Token);
-
                     
                    // Constants.AccessToken = Credential.Token.AccessToken;
 
@@ -107,7 +107,8 @@ namespace App1.Services
             FilesResource.ListRequest filesInFolder = DriveService.Files.List();
             filesInFolder.Q = "'" + folderID.ToString() + "' in parents";
             //listRequest.PageSize = 10;
-            filesInFolder.Fields = "nextPageToken, files(id, name)";
+            //filesInFolder.Fields = "nextPageToken, files(id, name)";
+            filesInFolder.Fields = @"files(*)";
             filesInFolder.Spaces = "drive";
 
             IList<Google.Apis.Drive.v3.Data.File> children = filesInFolder.Execute()
@@ -124,10 +125,10 @@ namespace App1.Services
                 foreach (var child in children)
                 {
                     //fileNames.Add(child.Name);
-                    AvailableSheets.Add(new SheetObj { ID = child.Id, Title = child.Name });
+                    AvailableSheets.Add(new SheetObj { ID = child.Id, Title = child.Name, LastModified = child.ModifiedTime });
 
 
-                    //add to Titles list
+                    // don't need this????
                     AvailableSheetTitles.Add(child.Name);
 
                     // Console.WriteLine("{0} ({1})", child.Name, child.Id);
@@ -137,14 +138,7 @@ namespace App1.Services
             {
                 Console.WriteLine("No files found.");
             }
-            //nsole.Read();
 
-
-            // set default active sheet
-           // UpdateActiveSheet(null);
-
-
-            //return fileNames;
             return AvailableSheets;
         }
 
@@ -181,10 +175,14 @@ namespace App1.Services
             };
 
             // check ActiveSheet's LatestRow
-            SheetsObject = SheetsService.Spreadsheets.Values.Get(ActiveSheet.ID, Constants.Range).Execute();
-            ActiveSheet.LatestRow = SheetsObject.Values.Count;
 
-            // LATEST rows not updating!
+            if(LatestRow != ActiveSheet.LatestRow)
+            {
+                SheetsObject = SheetsService.Spreadsheets.Values.Get(ActiveSheet.ID, Constants.Range).Execute();
+                ActiveSheet.LatestRow = SheetsObject.Values.Count;
+                LatestRow = ActiveSheet.LatestRow;
+            }
+
 
             ValueRange ValueRange = new ValueRange();
             ValueRange.Values = new List<IList<object>> { oblist };
@@ -205,67 +203,7 @@ namespace App1.Services
             return AvailableSheetTitles;
         }
 
-        //public string GetIDByTitle(string Title)
-        //{
 
-        //    // Budget   1tQUyndTujTi2iPh1UXxi6WH7u89otm8Zh6ZNoFGjxl4
-        //    // Test     E20mwtRBhJkhNCAswQlCtuDxgf8NUcvc
-        //    // October  1eQM8DAXs3TTmeHetFc6HcDT6jv2ibr7aTH4JNHbE2ug
-
-        //    //availabeSHeets is null!!!!
-        //    foreach ( SheetObj so in AvailableSheets)
-        //    {
-        //        if(string.Equals(so.Title, Title))
-        //        {
-        //            ActiveSheet.Title = Title;
-        //            //return so.ID;
-        //            return so.ID;
-        //        }
-        //    }
-        //    return null;
-        //}
-
-        /// <summary>
-        /// Updates ActiveSheet's properties
-        /// </summary>
-        /// <param name="SheetID"></param>
-        /// <returns></returns>
-        //public bool UpdateActiveSheet(string SheetID)
-        //{
-        //    // default
-        //    if (SheetID == null)
-        //    {
-        //        ActiveSheet = AvailableSheets[0];
-
-
-        //        SheetsObject = SheetsService.Spreadsheets.Values.Get(ActiveSheet.ID, Constants.Range).Execute();
-
-        //        //set Latest Row
-        //        ActiveSheet.LatestRow = SheetsObject.Values.Count;
-
-        //    }
-
-        //    // search AvailableSheets for matching SHeetID
-
-        //    else
-        //    {
-        //        ActiveSheet = AvailableSheets.Where(x => x.ID == SheetID).FirstOrDefault();
-
-        //        if (ActiveSheet != null)
-        //        {
-        //            SheetsObject = SheetsService.Spreadsheets.Values.Get(ActiveSheet.ID, Constants.Range).Execute();
-        //            ActiveSheet.LatestRow = SheetsObject.Values.Count;
-        //        }
-                
-        //    }
-        //    return true;
-
-
-        //    // Budget   1tQUyndTujTi2iPh1UXxi6WH7u89otm8Zh6ZNoFGjxl4
-        //    // Test     E20mwtRBhJkhNCAswQlCtuDxgf8NUcvc
-        //    // October  1eQM8DAXs3TTmeHetFc6HcDT6jv2ibr7aTH4JNHbE2ug
-
-        //}
 
     }
 }

@@ -65,6 +65,9 @@ namespace App1
             AvailableSheets = GoogleSheetsService.AvailableSheets;
             Categories = GoogleSheetsService.GetCategories();
 
+    
+            SelectedSheet = AvailableSheets[0];
+
         }
 
         public void AddExpense()

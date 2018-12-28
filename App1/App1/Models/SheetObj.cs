@@ -10,5 +10,7 @@ namespace App1.Models
         public string Title { get; set; }
         public int LatestRow { get; set; }
         public string UpdateRange { get; set; }
+
+        public DateTime? LastModified { get; set; }
     }
 }

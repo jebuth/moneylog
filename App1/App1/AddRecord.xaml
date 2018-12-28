@@ -6,7 +6,7 @@
              BackgroundColor="Gray">
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Icon="plus.png" Order="Primary" Clicked="ToolbarItem_Clicked"/>
+        <ToolbarItem Icon="plus.png" Order="Primary"/>
     </ContentPage.ToolbarItems>
 
     <StackLayout BackgroundColor="Green" 

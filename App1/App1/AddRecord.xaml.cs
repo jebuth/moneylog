@@ -22,40 +22,12 @@ namespace App1
 {    
     public partial class AddRecord : ContentPage
     {
-        //private SheetsAPI GoogleSheetsService { get; set; }
         private SheetObj ActiveSheet{ get; set; }
-        //private AddRecordViewModel ViewModel { get; set; }
-
-        public AddRecord()
-        {
-           // BindingContext = new AddRecordViewModel();
-
-            //InitializeComponent();
-        }
-
-
+        
         public AddRecord(SheetsAPI _GoogleSheetsService)
         {
-
             BindingContext = new AddRecordViewModel(_GoogleSheetsService);
-
             InitializeComponent();
-
-            //try
-            //{
-            //    if (GoogleSheetsService == null)
-            //    {
-            //        GoogleSheetsService = _GoogleSheetsService;
-            //        //ViewModel = new AddRecordViewModel();
-            //        BindingContext = new AddRecordViewModel(_GoogleSheetsService);     
-                    
-            //    }
-            //}
-
-            //catch(Exception ex)
-            //{
-
-            //}  
         }
 
         private void AddButton_Clicked(object sender, EventArgs e)
@@ -90,31 +62,6 @@ namespace App1
         {
             Regex money = new Regex(@"^\$(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$");
             return money.IsMatch(text);
-        }
-
-        private void SheetPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //var SelectedSpreadsheet = this.SheetPicker.SelectedItem as SheetObj;
-            //var s = this.SheetPicker.SelectedItem.ToString();
-
-            //this.ActiveSheet = this.SheetPicker.SelectedItem as SheetObj;
-
-            //var who = SelectedSpreadsheet.Title;
-
-            //var sheetID = SheetObject.GetIDByTitle(s);
-
-            //SheetObject.UpdateActiveSheet(sheetID);
-
-
-            // the drop down should already be populated by SheetObjs so 
-            // we don't need to do all this bs
-
-
-        }
-
-        private void ToolbarItem_Clicked(object sender, EventArgs e)
-        {
-
         }
     }
 } 
